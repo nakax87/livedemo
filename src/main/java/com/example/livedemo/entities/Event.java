@@ -39,11 +39,33 @@ public class Event {
     @Column(name = "recruitment_end_date", nullable = false)
     private LocalDateTime recruitmentEndDate;
 
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "event_date")
+    private LocalDateTime eventDate;
+
     @Column(name = "total_capacity")
     private Integer totalCapacity;
 
     @OneToMany(mappedBy = "event")
     private Set<Ticket> tickets;
 
-    // Getters and setters are omitted for brevity
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(LocalDateTime eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    // Getters and setters for existing fields are omitted for brevity
 }
