@@ -14,8 +14,11 @@ public interface EventMapper {
     @Select("SELECT * FROM events WHERE id = #{id}")
     Event findById(Long id);
     
-    @Insert("INSERT INTO events (name, event_date, registrations, status, satisfaction_rate, revenue) " +
-            "VALUES (#{name}, #{eventDate}, #{registrations}, #{status}, #{satisfactionRate}, #{revenue})")
+    @Select("SELECT * FROM events WHERE title = #{title}")
+    Event findByTitle(String title);
+
+    @Insert("INSERT INTO events (title, description, start_date, end_date, recruitment_start_date, recruitment_end_date, status, event_type) " +
+            "VALUES (#{title}, #{description}, #{startDate}, #{endDate}, #{recruitmentStartDate}, #{recruitmentEndDate}, #{status}, #{eventType})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(Event event);
     
@@ -27,4 +30,4 @@ public interface EventMapper {
     
     @Delete("DELETE FROM events WHERE id = #{id}")
     void delete(Long id);
-} 
+}

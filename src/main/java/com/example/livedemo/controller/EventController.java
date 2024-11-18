@@ -1,5 +1,7 @@
 package com.example.livedemo.controller;
 
+import org.springframework.web.servlet.ModelAndView;
+import java.util.Map;
 import com.example.livedemo.form.EventForm;
 import com.example.livedemo.service.EventService;
 import org.springframework.stereotype.Controller;
@@ -27,10 +29,19 @@ public class EventController {
         return "events/create";
     }
     
-    @PostMapping("/create")
-    public String create(@ModelAttribute EventForm form) {
-        eventService.createEvent(form);
-        return "redirect:/events";
+    @PostMapping(value = "/create")
+    public ModelAndView create(@ModelAttribute EventForm form) {
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            Map<String, Object> response = eventService.createEvent(form);
+            modelAndView.setViewName("redirect:/events");
+            modelAndView.addObject("message", response.get("message"));
+            modelAndView.addObject("eventId", response.get("eventId"));
+        } catch (Exception e) {
+            modelAndView.setViewName("events/create");
+            modelAndView.addObject("error", "Error creating event: " + e.getMessage());
+        }
+        return modelAndView;
     }
     
     @GetMapping("/{id}/edit")
@@ -50,4 +61,4 @@ public class EventController {
         eventService.deleteEvent(id);
         return "redirect:/events";
     }
-} 
+}
