@@ -1,7 +1,7 @@
 package com.example.livedemo.controller;
 
 import org.springframework.web.servlet.ModelAndView;
-import com.example.livedemo.service.EventServiceImpl;
+import com.example.livedemo.service.EventService;
 import java.util.Map;
 import com.example.livedemo.form.EventForm;
 import org.springframework.stereotype.Controller;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/events")
 public class EventController {
 
-    private final EventServiceImpl eventService;
+    private final EventService eventService;
 
-    public EventController(EventServiceImpl eventService) {
+    public EventController(EventService eventService) {
         this.eventService = eventService;
     }
 

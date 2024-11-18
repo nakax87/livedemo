@@ -1,6 +1,7 @@
 package com.example.livedemo.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 // import com.example.livedemo.entity.EventCustomField; // Removed unused import
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "events")
 @Data
+@NoArgsConstructor
 public class Event {
     @Id
     private Long id;
