@@ -22,34 +22,28 @@ public class Event {
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt; // This field matches the schema
 
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "is_online", nullable = false)
-    private Integer onlineCapacity; // This field matches the schema
+    private Boolean isOnline; // Corrected the data type to Boolean
 
     @Column(name = "is_onsite", nullable = false)
-    private Integer onsiteCapacity; // This field matches the schema
+    private Boolean isOnsite; // Corrected the data type to Boolean
 
-    @Column(name = "online_capacity")
-    private Integer onlineCapacity;
+    @Column(name = "online_capacity", nullable = false)
+    private Integer onlineCapacity; // Corrected the nullable attribute
 
-    @Column(name = "onsite_capacity")
-    private Integer onsiteCapacity;
+    @Column(name = "onsite_capacity", nullable = false)
+    private Integer onsiteCapacity; // Corrected the nullable attribute
 
-    @Column(name = "status") // This field was added in the update migration
-    private LocalDateTime recruitmentStartDate;
+    @Column(name = "status", nullable = false)
+    private String status; // Corrected the data type to String
 
-    @Column(name = "event_date") // This field was added in the update migration
-    private LocalDateTime recruitmentEndDate;
-
-    @Column(name = "status")
-    private String status;
-
-    @Column(name = "event_date")
-    private LocalDateTime eventDate;
+    @Column(name = "event_date", nullable = false)
+    private LocalDateTime eventDate; // Corrected the field name and data type
 
     @Column(name = "total_capacity")
     private Integer totalCapacity;
@@ -66,7 +60,7 @@ public class Event {
 
     // Method to calculate capacity utilization for online events
     public double getOnlineCapacityUtilization() {
-        if (isOnline != null && isOnline && onlineCapacity != null && onlineCapacity > 0) {
+        if (isOnline != null && isOnline && onlineCapacity != null && onlineCapacity > 0) { // Corrected the variable name
             return (double) getApplicantsCount() / onlineCapacity * 100;
         }
         return 0;
@@ -74,7 +68,7 @@ public class Event {
 
     // Method to calculate capacity utilization for onsite events
     public double getOnsiteCapacityUtilization() {
-        if (isOnsite != null && isOnsite && onsiteCapacity != null && onsiteCapacity > 0) {
+        if (isOnsite != null && isOnsite && onsiteCapacity != null && onsiteCapacity > 0) { // Corrected the variable name
             return (double) getApplicantsCount() / onsiteCapacity * 100;
         }
         return 0;
