@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者ダッシュボード</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-green-50 min-h-screen">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold text-green-800 mb-6">管理者ダッシュボード</h1>
+        
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="flex flex-row items-center justify-between pb-2">
+                    <h2 class="text-sm font-medium">総イベント数</h2>
+                </div>
+                <div class="text-2xl font-bold">24</div>
+                <p class="text-xs text-gray-500">前月比 +10%</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="flex flex-row items-center justify-between pb-2">
+                    <h2 class="text-sm font-medium">総参加者数</h2>
+                </div>
+                <div class="text-2xl font-bold">2,880</div>
+                <p class="text-xs text-gray-500">前月比 +15%</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="flex flex-row items-center justify-between pb-2">
+                    <h2 class="text-sm font-medium">平均満足度</h2>
+                </div>
+                <div class="text-2xl font-bold">4.5 / 5</div>
+                <p class="text-xs text-gray-500">前月比 +0.2</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="flex flex-row items-center justify-between pb-2">
+                    <h2 class="text-sm font-medium">総収益</h2>
+                </div>
+                <div class="text-2xl font-bold">¥5,760,000</div>
+                <p class="text-xs text-gray-500">前月比 +20%</p>
+            </div>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2 mb-8">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold mb-2">最近のイベント</h2>
+                <p class="text-sm text-gray-600 mb-4">直近のイベントとその状況</p>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">イベント名</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日付</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">登録数</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr th:each="event : ${recentEvents}">
+                            <td class="px-6 py-4 whitespace-nowrap" th:text="${event.name}">テクノロジーカンファレンス2023</td>
+                            <td class="px-6 py-4 whitespace-nowrap" th:text="${event.date}">2023-09-15</td>
+                            <td class="px-6 py-4 whitespace-nowrap" th:text="${event.registrations}">350</td>
+                            <td class="px-6 py-4 whitespace-nowrap" th:text="${event.status}">開催中</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-lg font-semibold mb-2">月別イベント・参加者数</h2>
+                <p class="text-sm text-gray-600 mb-4">過去6ヶ月のイベント数と参加者数の推移</p>
+                <canvas id="monthlyChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+        // モックデータ（実際の使用時はサーバーサイドから提供）
+        var recentEvents = /*[[${recentEvents}]]*/ [
+            { id: 1, name: "テクノロジーカンファレンス2023", date: "2023-09-15", registrations: 350, status: "開催中" },
+            { id: 2, name: "ウェブ開発ワークショップ", date: "2023-10-01", registrations: 150, status: "準備中" },
+            { id: 3, name: "ビジネスにおけるAIセミナー", date: "2023-10-15", registrations: 80, status: "登録受付中" },
+        ];
+
+        var monthlyData = /*[[${monthlyData}]]*/ [
+            { month: '1月', eventCount: 4, participantCount: 450 },
+            { month: '2月', eventCount: 3, participantCount: 380 },
+            { month: '3月', eventCount: 5, participantCount: 600 },
+            { month: '4月', eventCount: 4, participantCount: 520 },
+            { month: '5月', eventCount: 6, participantCount: 750 },
+            { month: '6月', eventCount: 5, participantCount: 680 },
+        ];
+
+        // Chart.jsを使用してグラフを描画
+        var ctx = document.getElementById('monthlyChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: monthlyData.map(item => item.month),
+                datasets: [{
+                    label: 'イベント数',
+                    data: monthlyData.map(item => item.eventCount),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y-axis-1',
+                }, {
+                    label: '参加者数',
+                    data: monthlyData.map(item => item.participantCount),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y-axis-2',
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        id: 'y-axis-1',
+                    }, {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                        gridLines: {
+                            drawOnChartArea: false,
+                        },
+                    }],
+                }
+            }
+        });
+    /*]]>*/
+    </script>
+</body>
+</html>
