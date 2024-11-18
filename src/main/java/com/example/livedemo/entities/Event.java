@@ -51,21 +51,26 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private Set<Ticket> tickets;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(LocalDateTime eventDate) {
-        this.eventDate = eventDate;
-    }
-
     // Getters and setters for existing fields are omitted for brevity
+
+    // Method to calculate the number of applicants
+    public int getApplicantsCount() {
+        return tickets != null ? tickets.size() : 0;
+    }
+
+    // Method to calculate capacity utilization for online events
+    public double getOnlineCapacityUtilization() {
+        if (isOnline != null && isOnline && onlineCapacity != null && onlineCapacity > 0) {
+            return (double) getApplicantsCount() / onlineCapacity * 100;
+        }
+        return 0;
+    }
+
+    // Method to calculate capacity utilization for onsite events
+    public double getOnsiteCapacityUtilization() {
+        if (isOnsite != null && isOnsite && onsiteCapacity != null && onsiteCapacity > 0) {
+            return (double) getApplicantsCount() / onsiteCapacity * 100;
+        }
+        return 0;
+    }
 }
