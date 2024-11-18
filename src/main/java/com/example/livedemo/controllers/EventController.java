@@ -2,26 +2,30 @@ package com.example.livedemo.controllers;
 
 import com.example.livedemo.entities.Event;
 import com.example.livedemo.services.EventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 public class EventController {
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
+
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @GetMapping("/events")
     public List<EventDTO> getEventList(@RequestParam Long organizerId,
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "10") int size) {
-        Page<Event> eventsPage = eventService.getEventsByOrganizerId(organizerId, page, size);
+        Page<Event> eventsPage = eventService.getEventsByOrganizerId(organizerId, PageRequest.of(page, size));
         List<Event> events = eventsPage.getContent();
 
         if (events.isEmpty()) {
@@ -29,9 +33,9 @@ public class EventController {
         }
 
         return events.stream().map(event -> {
-            int applicants = event.getTickets().size();
-            double capacityUtilizationOnline = event.getIsOnline() ? (double) applicants / event.getOnlineCapacity() * 100 : 0;
-            double capacityUtilizationOnsite = event.getIsOnsite() ? (double) applicants / event.getOnsiteCapacity() * 100 : 0;
+            int applicants = event.getApplicantsCount();
+            double capacityUtilizationOnline = event.getOnlineCapacityUtilization();
+            double capacityUtilizationOnsite = event.getOnsiteCapacityUtilization();
             return new EventDTO(
                     event.getId(),
                     applicants,

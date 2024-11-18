@@ -1,6 +1,12 @@
 package com.example.livedemo.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -22,10 +28,10 @@ public class Event {
     private String title;
 
     @Column(name = "is_online", nullable = false)
-    private Boolean isOnline;
+    private Integer onlineCapacity; // This field matches the schema
 
     @Column(name = "is_onsite", nullable = false)
-    private Boolean isOnsite;
+    private Integer onsiteCapacity; // This field matches the schema
 
     @Column(name = "online_capacity")
     private Integer onlineCapacity;
@@ -33,10 +39,10 @@ public class Event {
     @Column(name = "onsite_capacity")
     private Integer onsiteCapacity;
 
-    @Column(name = "recruitment_start_date", nullable = false)
+    @Column(name = "status") // This field was added in the update migration
     private LocalDateTime recruitmentStartDate;
 
-    @Column(name = "recruitment_end_date", nullable = false)
+    @Column(name = "event_date") // This field was added in the update migration
     private LocalDateTime recruitmentEndDate;
 
     @Column(name = "status")
