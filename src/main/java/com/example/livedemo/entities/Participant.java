@@ -1,13 +1,11 @@
 package com.example.livedemo.entities;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
-@Table(name = "tickets")
-public class Ticket {
+@Table(name = "participants")
+public class Participant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,21 +17,25 @@ public class Ticket {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "type", nullable = false)
-    private String type;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "price", nullable = false)
-    private BigDecimal price;
+    @Column(name = "email", nullable = false)
+    private String email;
 
-    @Column(name = "is_free", nullable = false)
-    private Boolean isFree;
+    @Column(name = "credit_card_info")
+    private String creditCardInfo;
+
+    @Column(name = "participation_type", nullable = false)
+    private String participationType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
-    private Set<Participant> participants;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
     // Getters and setters omitted for brevity
 }
