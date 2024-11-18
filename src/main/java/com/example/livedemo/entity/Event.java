@@ -1,6 +1,7 @@
 package com.example.livedemo.entity;
 
 import lombok.Data;
+// import com.example.livedemo.entity.EventCustomField; // Removed unused import
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
