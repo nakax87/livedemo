@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI駆動開発の教科書</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'Yu Gothic', 'Hiragino Kaku Gothic Pro', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow-x: hidden;
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            position: relative;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 94, 162, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 94, 162, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .slide-content {
+            max-width: 1400px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Slide 1 - タイトルスライド */
+        .slide-1 {
+            background: linear-gradient(135deg, #e8ecf1 0%, #f5f5f5 100%);
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .book-cover {
+            flex-shrink: 0;
+            width: 450px;
+            height: 600px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            position: relative;
+            transform: perspective(1000px) rotateY(-5deg);
+        }
+
+        .book-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: #005ea2;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .book-subtitle {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .book-illustration {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf1 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .illustration-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .illustration-item {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            border: 3px solid #005ea2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .book-footer {
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .main-title {
+            flex: 1;
+        }
+
+        .main-title h1 {
+            font-size: 72px;
+            font-weight: 900;
+            color: #005ea2;
+            line-height: 1.3;
+            margin-bottom: 30px;
+        }
+
+        .main-title p {
+            font-size: 32px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Slide 2 - アジェンダ */
+        .slide-2 {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .agenda-title {
+            font-size: 64px;
+            font-weight: 900;
+            color: #005ea2;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .agenda-items {
+            display: grid;
+            gap: 40px;
+        }
+
+        .agenda-item {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .agenda-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .agenda-number {
+            font-size: 72px;
+            font-weight: 900;
+            color: #005ea2;
+            min-width: 100px;
+        }
+
+        .agenda-icon {
+            font-size: 80px;
+            color: #005ea2;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f7fc;
+            border-radius: 12px;
+        }
+
+        .agenda-text {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            flex: 1;
+        }
+
+        /* Slide 3 - 3つの体験 */
+        .slide-3 {
+            background: linear-gradient(135deg, #f0f7fc 0%, #ffffff 100%);
+        }
+
+        .experience-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: #005ea2;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .experience-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .experience-card {
+            background: white;
+            border-radius: 16px;
+            padding: 50px 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .experience-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: #f0f7fc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #005ea2;
+        }
+
+        .experience-icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: #005ea2;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .experience-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #005ea2;
+            margin-bottom: 20px;
+        }
+
+        .experience-card p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        /* Slide 4 - 対象読者 */
+        .slide-4 {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7fc 100%);
+        }
+
+        .target-title {
+            font-size: 56px;
+            font-weight: 900;
+            color: #005ea2;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .target-container {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .target-illustration {
+            width: 400px;
+            height: 400px;
+            background: #f0f7fc;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .target-illustration svg {
+            width: 300px;
+            height: 300px;
+        }
+
+        .target-content {
+            flex: 1;
+        }
+
+        .target-section {
+            margin-bottom: 50px;
+        }
+
+        .target-section h3 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .target-section p {
+            font-size: 20px;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .support-items {
+            display: grid;
+            gap: 20px;
+        }
+
+        .support-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .support-item::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: #005ea2;
+            color: white;
+            border-radius: 6px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Slide 5 - 開発プロセス */
+        .slide-5 {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .process-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: #005ea2;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .process-timeline {
+            position: relative;
+            padding: 60px 0;
+        }
+
+        .timeline-arrow {
+            position: absolute;
+            top: 120px;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: #005ea2;
+            clip-path: polygon(0 0, calc(100% - 40px) 0, calc(100% - 40px) 30%, 100% 50%, calc(100% - 40px) 70%, calc(100% - 40px) 100%, 0 100%);
+        }
+
+        .timeline-stages {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stage {
+            text-align: center;
+        }
+
+        .stage-name {
+            font-size: 48px;
+            font-weight: 900;
+            color: #005ea2;
+            margin-bottom: 40px;
+        }
+
+        .stage-tool {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .tool-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .tool-logo::before {
+            content: '⚙';
+            font-size: 40px;
+            color: #005ea2;
+        }
+
+        .tool-version {
+            font-size: 72px;
+            font-weight: 900;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .github-copilot::before {
+            content: '';
+            width: 40px;
+            height: 40px;
+            background: #000;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        @media (max-width: 1200px) {
+            .title-container {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .book-cover {
+                width: 100%;
+                max-width: 450px;
+                transform: none;
+            }
+
+            .main-title h1 {
+                font-size: 56px;
+                text-align: center;
+            }
+
+            .main-title p {
+                font-size: 24px;
+                text-align: center;
+            }
+
+            .experience-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-stages {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .target-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: タイトル -->
+    <section class="slide slide-1">
+        <div class="slide-content">
+            <div class="title-container">
+                <div class="book-cover">
+                    <h2 class="book-title">AI駆動開発の<br>教科書</h2>
+                    <p class="book-subtitle">チュートリアルで学ぶエン<br>タープライズ開発を体験しよう</p>
+
+                    <div class="book-illustration">
+                        <div class="illustration-grid">
+                            <div class="illustration-item">🧠</div>
+                            <div class="illustration-item">☁️</div>
+                            <div class="illustration-item">🏢</div>
+                            <div class="illustration-item">⚙️</div>
+                            <div class="illustration-item">💻</div>
+                            <div class="illustration-item">🗄️</div>
+                        </div>
+                    </div>
+
+                    <div class="book-footer">
+                        <p>著：山田太郎、軽本正子｜監修：田中一郎</p>
+                        <p style="margin-top: 10px;">技術評論社</p>
+                    </div>
+                </div>
+
+                <div class="main-title">
+                    <h1>AI駆動開発の教科書</h1>
+                    <p>チュートリアルで学ぶエンタープライズ<br>開発を体験しよう</p>
+                </div>
+            </div>
+        </div>
+        <div class="watermark">© NotebookLM</div>
+    </section>
+
+    <!-- Slide 2: アジェンダ -->
+    <section class="slide slide-2">
+        <div class="slide-content">
+            <h2 class="agenda-title">本日のアジェンダ</h2>
+
+            <div class="agenda-items">
+                <div class="agenda-item">
+                    <div class="agenda-number">1.</div>
+                    <div class="agenda-icon">📖</div>
+                    <div class="agenda-text">チュートリアルの概要: 本書で何を学べるか</div>
+                </div>
+
+                <div class="agenda-item">
+                    <div class="agenda-number">2.</div>
+                    <div class="agenda-icon">⚙️</div>
+                    <div class="agenda-text">活用するAIツール: 開発を駆動するパートナーたち</div>
+                </div>
+
+                <div class="agenda-item">
+                    <div class="agenda-number">3.</div>
+                    <div class="agenda-icon">🔄</div>
+                    <div class="agenda-text">開発工程を体験: 要件定義からテストまで</div>
+                </div>
+
+                <div class="agenda-item">
+                    <div class="agenda-number">4.</div>
+                    <div class="agenda-icon">🚀</div>
+                    <div class="agenda-text">まとめ: AI駆動開発がもたらす現実的な未来</div>
+                </div>
+            </div>
+        </div>
+        <div class="watermark">© NotebookLM</div>
+    </section>
+
+    <!-- Slide 3: 3つの体験 -->
+    <section class="slide slide-3">
+        <div class="slide-content">
+            <h2 class="experience-title">100ページに渡る実践チュートリアルで得られる3つの体験</h2>
+
+            <div class="experience-cards">
+                <div class="experience-card">
+                    <div class="experience-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                            <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <h3>一連の工程を体験</h3>
+                    <p>要件定義から設計、実装、テストまで、開発ライフサイクル全体をAIと共に遂行する流れをハンズオンで学べます。</p>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
+                        </svg>
+                    </div>
+                    <h3>最新ツールの活用術</h3>
+                    <p>GEAR.indigoやGitHub Copilotといった先進的ツールを、エンタープライズ開発の文脈で使いこなす実践的なノウハウが身につきます。</p>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                            <circle cx="12" cy="8" r="2" fill="#005ea2"/>
+                        </svg>
+                    </div>
+                    <h3>高度なテクニックの習得</h3>
+                    <p>生成AIの品質を劇的に向上させる「コンテキストエンジニアリング」など、一歩進んだ専門的なテクニックまで踏み込んで解説します。</p>
+                </div>
+            </div>
+        </div>
+        <div class="watermark">© NotebookLM</div>
+    </section>
+
+    <!-- Slide 4: 対象読者とサポート -->
+    <section class="slide slide-4">
+        <div class="slide-content">
+            <h2 class="target-title">すべてのエンジニアに、実践的なAI駆動開発を</h2>
+
+            <div class="target-container">
+                <div class="target-illustration">
+                    <svg viewBox="0 0 300 300">
+                        <!-- Person 1 -->
+                        <circle cx="80" cy="100" r="25" fill="#005ea2"/>
+                        <path d="M 50 140 Q 80 120 110 140 L 110 180 L 50 180 Z" fill="#005ea2"/>
+
+                        <!-- Person 2 -->
+                        <ellipse cx="150" cy="90" rx="28" ry="30" fill="#c86428"/>
+                        <path d="M 115 135 Q 150 110 185 135 L 185 190 L 115 190 Z" fill="#4a90e2"/>
+
+                        <!-- Person 3 -->
+                        <circle cx="220" cy="120" r="22" fill="#c86428"/>
+                        <path d="M 195 155 Q 220 140 245 155 L 245 190 L 195 190 Z" fill="#005ea2"/>
+
+                        <!-- Laptop -->
+                        <rect x="110" y="200" width="80" height="50" rx="4" fill="#333"/>
+                        <rect x="115" y="205" width="70" height="40" fill="#4a90e2" opacity="0.3"/>
+                        <line x1="100" y1="250" x2="200" y2="250" stroke="#333" stroke-width="3"/>
+                    </svg>
+                </div>
+
+                <div class="target-content">
+                    <div class="target-section">
+                        <h3>対象読者</h3>
+                        <p>実践的なAI駆動開発に入門したいすべてのエンジニア</p>
+                    </div>
+
+                    <div class="target-section">
+                        <h3>サポート体制</h3>
+                        <div class="support-items">
+                            <div class="support-item">豊富な図解と丁寧な手順解説で初心者にもやさしい</div>
+                            <div class="support-item">環境構築手順やトラブルシューティングも充実</div>
+                            <div class="support-item">書籍で利用するプロンプトとソースコードは全量ダウンロード可能</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="watermark">© NotebookLM</div>
+    </section>
+
+    <!-- Slide 5: 開発プロセス -->
+    <section class="slide slide-5">
+        <div class="slide-content">
+            <h2 class="process-title">チュートリアルで体験する開発プロセスとAIツール</h2>
+
+            <div class="process-timeline">
+                <div class="timeline-arrow"></div>
+
+                <div class="timeline-stages">
+                    <div class="stage">
+                        <div class="stage-name">要件定義</div>
+                        <div class="stage-tool">
+                            <div class="tool-logo">GEAR.indigo</div>
+                            <div class="tool-version">v0</div>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-name">設計</div>
+                        <div class="stage-tool">
+                            <div class="tool-logo">GEAR.indigo</div>
+                            <div class="tool-version">v0</div>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-name">実装</div>
+                        <div class="stage-tool">
+                            <div class="tool-logo github-copilot">GitHub Copilot</div>
+                            <div class="tool-version">v0</div>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-name">テスト</div>
+                        <div class="stage-tool">
+                            <div class="tool-logo">GEAR.indigo</div>
+                            <div class="tool-version">v0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="watermark">© NotebookLM</div>
+    </section>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add keyboard navigation
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+                }
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                currentSlide = 0;
+                slides[0].scrollIntoView({ behavior: 'smooth' });
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                currentSlide = slides.length - 1;
+                slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Update current slide on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    currentSlide = Array.from(slides).indexOf(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        slides.forEach(slide => observer.observe(slide));
+    </script>
+</body>
+</html>
